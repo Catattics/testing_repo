@@ -1,6 +1,7 @@
 ---
 - name: Update and Upgrade Debian
   hosts: production
+  connection: local
 
   tasks:
     - name: Update APT package cache

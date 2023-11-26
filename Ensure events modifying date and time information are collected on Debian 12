@@ -1,0 +1,21 @@
+---
+- name: Ensure events modifying date and time information are collected on Debian 12
+  hosts: your_debian12_host
+  become: yes
+
+  tasks:
+
+    - name: Ensure audit rules for date and time files
+      copy:
+        content: |
+          -w /etc/localtime -p wa -k localtime_modifications
+          -w /etc/timezone -p wa -k timezone_modifications
+        dest: /etc/audit/rules.d/datetime_modifications.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/datetime_modifications.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

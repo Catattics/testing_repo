@@ -23,7 +23,7 @@
         autoremove: yes
         autoclean: yes
 
-   - name: Check if kernel upgrade is available
+    - name: Check if kernel upgrade is available
       command: dpkg-query -W -f='${Status}' linux-image-$(uname -r) | grep -q 'install ok installed'
       register: kernel_upgrade_check
       changed_when: false

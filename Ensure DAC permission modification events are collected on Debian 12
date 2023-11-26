@@ -1,0 +1,21 @@
+---
+- name: Ensure DAC permission modification events are collected on Debian 12
+  hosts: all
+  become: yes
+
+  tasks:
+   
+    - name: Ensure audit rules for DAC permission modifications
+      copy:
+        content: |
+          -a always,exit -F arch=b64 -S chmod,fchmod,fchmodat -F auid>=1000 -k dac_permission_modifications
+          -a always,exit -F arch=b32 -S chmod,fchmod,fchmodat -F auid>=1000 -k dac_permission_modifications
+        dest: /etc/audit/rules.d/dac_permission_modifications.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/dac_permission_modifications.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

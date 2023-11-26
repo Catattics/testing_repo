@@ -1,6 +1,6 @@
 ---
 - name: Ensure events modifying the system's network environment are collected on Debian 12
-  hosts: your_debian12_host
+  hosts: all
   become: yes
 
   tasks:

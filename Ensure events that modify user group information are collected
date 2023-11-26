@@ -1,0 +1,23 @@
+---
+- name: Ensure events modifying user/group information are collected on Debian 12
+  hosts: all
+  become: yes
+
+  tasks:
+  
+    - name: Ensure audit rules for user/group modifications
+      copy:
+        content: |
+          -w /etc/passwd -p wa -k user_modifications
+          -w /etc/group -p wa -k group_modifications
+          -a always,exit -F arch=b64 -S setgroups,setresuid,setreuid,setgid,setresgid,setregid,chown,fchown,lchown -k user_group_modifications
+          -a always,exit -F arch=b32 -S setgroups,setresuid,setreuid,setgid,setresgid,setregid,chown,fchown,lchown -k user_group_modifications
+        dest: /etc/audit/rules.d/user_group_modifications.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/user_group_modifications.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

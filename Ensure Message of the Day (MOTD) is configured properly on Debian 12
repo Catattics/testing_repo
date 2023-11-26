@@ -1,0 +1,15 @@
+---
+- name: Ensure Message of the Day (MOTD) is configured properly on Debian 12
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Set MOTD
+      template:
+        src: motd.j2
+        dest: /etc/motd
+      notify: Update MOTD
+
+  handlers:
+    - name: Update MOTD
+      command: echo "MOTD has been updated"

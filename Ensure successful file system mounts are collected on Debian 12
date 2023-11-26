@@ -1,6 +1,6 @@
 ---
 - name: Ensure successful file system mounts are collected on Debian 12
-  hosts: your_debian12_host
+  hosts: all
   become: yes
 
   tasks:

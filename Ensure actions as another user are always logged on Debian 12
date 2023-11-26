@@ -1,0 +1,25 @@
+---
+- name: Ensure actions as another user are always logged on Debian 12
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install auditd package
+      apt:
+        name: auditd
+        state: present
+
+    - name: Ensure audit rules for user actions
+      copy:
+        content: |
+          -a exit,always -F arch=b64 -S execve -F euid=0 -k privileged_actions
+          -a exit,always -F arch=b32 -S execve -F euid=0 -k privileged_actions
+      dest: /etc/audit/rules.d/privileged_actions.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/privileged_actions.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

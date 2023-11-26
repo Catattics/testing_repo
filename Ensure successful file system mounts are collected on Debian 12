@@ -1,0 +1,21 @@
+---
+- name: Ensure successful file system mounts are collected on Debian 12
+  hosts: your_debian12_host
+  become: yes
+
+  tasks:
+
+    - name: Ensure audit rules for successful file system mounts
+      copy:
+        content: |
+          -a always,exit -F arch=b64 -S mount -F success=1 -k successful_mounts
+          -a always,exit -F arch=b32 -S mount -F success=1 -k successful_mounts
+        dest: /etc/audit/rules.d/successful_mounts.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/successful_mounts.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

@@ -16,7 +16,7 @@
         dest: /etc/audit/rules.d/session_initiation.rules
 
     - name: Reload auditd rules
-      command: auditctl -R /etc/audit/rules.d/session_initiation.rules
+      command: "auditctl -R /etc/audit/rules.d/session_initiation.rules"
 
     - name: Restart auditd service
       service:

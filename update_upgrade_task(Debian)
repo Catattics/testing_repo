@@ -1,6 +1,6 @@
 ---
 - name: Update and Upgrade Debian
-  hosts: production
+  hosts: Homelab
   connection: local
 
   tasks:

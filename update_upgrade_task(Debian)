@@ -5,8 +5,7 @@
   tasks:
     - name: Update APT package cache
       become: true
-      apt:
-        update_cache: yes
+      shell: apt-get update
     
     - name: Upgrade all packages
       become: true

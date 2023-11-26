@@ -1,0 +1,23 @@
+---
+- name: Configure Local Login Warning Banner for Debian 12
+  hosts: all
+  become: yes
+
+  vars:
+    login_banner: |
+      ********************************************************************
+      ** Warning: This is a private system. Unauthorized access is       **
+      ** prohibited. Disconnect immediately if you are not an authorized **
+      ** user!                                                            **
+      ********************************************************************
+
+  tasks:
+    - name: Set Local Login Warning Banner
+      template:
+        src: issue.j2
+        dest: /etc/issue
+      notify: Update Issue
+
+  handlers:
+    - name: Update Issue
+      command: echo -e "\\033[1;31mRebuilding /etc/issue file\\033[0m"

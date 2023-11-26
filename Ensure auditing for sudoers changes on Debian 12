@@ -11,7 +11,7 @@
 
     - name: Ensure audit rules for sudoers
       copy:
-      content: |
+        content: |
           -w /etc/sudoers -p wa -k sudoers_changes
       dest: /etc/audit/rules.d/sudoers_changes.rules
 

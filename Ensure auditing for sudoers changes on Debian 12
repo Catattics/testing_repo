@@ -11,9 +11,8 @@
 
     - name: Ensure audit rules for sudoers
       copy:
-        content: |
-          -w /etc/sudoers -p wa -k sudoers_changes
-      dest: /etc/audit/rules.d/sudoers_changes.rules
+        content: "-w /etc/sudoers -p wa -k sudoers_changes"
+        dest: /etc/audit/rules.d/sudoers_changes.rules
 
     - name: Reload auditd rules
       command: auditctl -R /etc/audit/rules.d/sudoers_changes.rules

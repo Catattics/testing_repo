@@ -1,0 +1,17 @@
+---
+- name: Ensure Permissions on /etc/issue are Configured for Debian 12
+  hosts: your_debian12_host
+  become: yes
+
+  tasks:
+    - name: Set Permissions on /etc/issue
+      file:
+        path: /etc/issue
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Update Permissions
+
+  handlers:
+    - name: Update Permissions
+      command: echo "Permissions on /etc/issue have been updated"

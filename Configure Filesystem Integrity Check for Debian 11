@@ -1,0 +1,33 @@
+---
+- name: Configure Filesystem Integrity Check for Debian 11
+  hosts: your_debian11_host
+  become: yes
+
+  tasks:
+    - name: Install AIDE
+      apt:
+        name: aide
+        state: present
+
+    - name: Initialize AIDE database
+      command: aideinit
+      args:
+        creates: /var/lib/aide/aide.db.new
+
+    - name: Copy AIDE database
+      command: mv /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+      args:
+        creates: /var/lib/aide/aide.db
+
+    - name: Configure AIDE cron job
+      cron:
+        name: Run AIDE daily integrity check
+        minute: 0
+        hour: 4
+        job: "/usr/bin/aide --check"
+
+  handlers:
+    - name: Restart AIDE service
+      service:
+        name: aide
+        state: restarted

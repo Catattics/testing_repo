@@ -5,5 +5,5 @@ System Information:
 {{ ansible_distribution }} {{ ansible_distribution_version }}
 Hostname: {{ ansible_hostname }}
 IP Address: {{ ansible_default_ipv4.address }}
-Last Login: {{ ansible_last_login }}
+Last Login: {{ ansible_date_time.date }} {{ ansible_date_time.time }}
 *************************************

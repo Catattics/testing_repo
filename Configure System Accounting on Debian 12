@@ -1,6 +1,6 @@
 ---
 - name: Configure System Accounting on Debian 12
-  hosts: your_debian12_host
+  hosts: all
   become: yes
 
   tasks:

@@ -1,0 +1,20 @@
+---
+- name: Configure System Accounting on Debian 12
+  hosts: your_debian12_host
+  become: yes
+
+  tasks:
+    - name: Install acct package
+      apt:
+        name: acct
+        state: present
+
+    - name: Enable process accounting
+      command: update-rc.d -f acct enable
+      notify: Start Accounting
+
+  handlers:
+    - name: Start Accounting
+      service:
+        name: acct
+        state: started

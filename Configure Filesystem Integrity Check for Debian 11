@@ -1,6 +1,6 @@
 ---
 - name: Configure Filesystem Integrity Check for Debian 11
-  hosts: your_debian11_host
+  hosts: all
   become: yes
 
   tasks:

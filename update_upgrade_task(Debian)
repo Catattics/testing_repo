@@ -3,7 +3,6 @@
   hosts: all
   become: true
   become_user: root
-  sudo: yes
 
   tasks:
     - name: Update APT package cache

@@ -1,25 +1,22 @@
 ---
 - name: Update and Upgrade Debian
   hosts: all
+  become: true
 
   tasks:
     - name: Update APT package cache
-      become: true
       apt:
         update_cache: yes
     
     - name: Upgrade all packages
-      become: true
       apt:
         upgrade: yes
 
     - name: Perform dist-upgrade
-      become: true
       apt:
         upgrade: dist
 
     - name: Clean up package cache
-      become: true
       apt:
         autoremove: yes
         autoclean: yes

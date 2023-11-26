@@ -1,0 +1,21 @@
+---
+- name: Ensure unsuccessful file access attempts are collected on Debian 12
+  hosts: all
+  become: yes
+
+  tasks:
+  
+    - name: Ensure audit rules for unsuccessful file access attempts
+      copy:
+        content: |
+          -a always,exit -F arch=b64 -S open,openat,creat -F success=0 -k unsuccessful_file_access
+          -a always,exit -F arch=b32 -S open,openat,creat -F success=0 -k unsuccessful_file_access
+        dest: /etc/audit/rules.d/unsuccessful_file_access.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/unsuccessful_file_access.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

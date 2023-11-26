@@ -1,0 +1,16 @@
+---
+- name: Ensure Auditing is Enabled on Debian 12
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install auditd package
+      apt:
+        name: auditd
+        state: present
+
+    - name: Enable auditd service
+      service:
+        name: auditd
+        enabled: yes
+        state: started

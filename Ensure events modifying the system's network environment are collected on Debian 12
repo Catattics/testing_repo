@@ -1,0 +1,24 @@
+---
+- name: Ensure events modifying the system's network environment are collected on Debian 12
+  hosts: your_debian12_host
+  become: yes
+
+  tasks:
+
+    - name: Ensure audit rules for network-related files and activities
+      copy:
+        content: |
+          -w /etc/network/ -p wa -k network_modifications
+          -w /etc/resolv.conf -p wa -k resolv_conf_modifications
+          -w /etc/hosts -p wa -k hosts_modifications
+          -a always,exit -F arch=b64 -S socket -F auid>=1000 -k socket_activities
+          -a always,exit -F arch=b32 -S socket -F auid>=1000 -k socket_activities
+        dest: /etc/audit/rules.d/network_modifications.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/network_modifications.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

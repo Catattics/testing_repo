@@ -1,0 +1,24 @@
+---
+- name: Ensure session initiation information is collected on Debian 12
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Ensure audit rules for session initiation
+      copy:
+        content: |
+          -a always,exit -F arch=b64 -S login -k session_initiation
+          -a always,exit -F arch=b32 -S login -k session_initiation
+          -w /var/run/utmp -p wa -k session_initiation
+          -w /var/log/wtmp -p wa -k session_initiation
+          -w /var/log/btmp -p wa -k session_initiation
+        dest: /etc/audit/rules.d/session_initiation.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/session_initiation.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

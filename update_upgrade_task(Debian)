@@ -22,3 +22,19 @@
       apt:
         autoremove: yes
         autoclean: yes
+
+    - name: Check if kernel upgrade is available
+      command: dpkg-query -W -f='${Status}' linux-image-$(uname -r) | grep -q 'install ok installed'
+      register: kernel_upgrade_check
+      changed_when: false
+      ignore_errors: true
+
+    - name: Reboot if kernel was upgraded
+      command: shutdown -r now
+      when: kernel_upgrade_check.rc != 0
+
+    - name: Restart all services if kernel was not upgraded
+      service:
+        name: "*"
+        state: restarted
+      when: kernel_upgrade_check.rc == 0

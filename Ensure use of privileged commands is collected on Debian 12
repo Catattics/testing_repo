@@ -8,8 +8,8 @@
     - name: Ensure audit rules for privileged commands
       copy:
         content: |
-          -a always,exit -F arch=b64 -S execve -C euid=0 -F euid!=0 -k privileged_commands
-          -a always,exit -F arch=b32 -S execve -C euid=0 -F euid!=0 -k privileged_commands
+          -a always,exit -F arch=b64 -S execve -F euid=0 -F euid!=0 -k privileged_commands
+          -a always,exit -F arch=b32 -S execve -F euid=0 -F euid!=0 -k privileged_commands
         dest: /etc/audit/rules.d/privileged_commands.rules
 
     - name: Reload auditd rules

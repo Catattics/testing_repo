@@ -1,6 +1,6 @@
 ---
 - name: Ensure Permissions on /etc/motd are Configured for Debian 12
-  hosts: your_debian12_host
+  hosts: all
   become: yes
 
   tasks:

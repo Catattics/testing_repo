@@ -1,0 +1,23 @@
+---
+- name: Ensure login and logout events are collected on Debian 12
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Ensure audit rules for login and logout events
+      copy:
+        content: |
+          -a always,exit -F arch=b64 -S execve -C uid!=euid -F euid=0 -k login_events
+          -a always,exit -F arch=b32 -S execve -C uid!=euid -F euid=0 -k login_events
+          -w /var/log/wtmp -p wa -k login_events
+          -w /var/log/btmp -p wa -k login_events
+        dest: /etc/audit/rules.d/login_logout_events.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/login_logout_events.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

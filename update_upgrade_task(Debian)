@@ -7,22 +7,18 @@
 
   tasks:
     - name: Update APT package cache
-      become: yes
       apt:
         update_cache: yes
 
     - name: Upgrade all packages
-      become: yes
       apt:
         upgrade: yes
 
     - name: Perform dist-upgrade
-      become: yes
       apt:
         upgrade: dist
 
     - name: Clean up package cache
-      become: yes
       apt:
         autoremove: yes
         autoclean: yes

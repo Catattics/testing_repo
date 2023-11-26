@@ -4,6 +4,11 @@
   become: yes
 
   tasks:
+    - name: Download motd.j2 template
+      get_url:
+        url: "https://raw.githubusercontent.com/Tcogswell/testing_repo/main/motd.j2"
+        dest: /etc/motd
+
     - name: Set MOTD
       template:
         src: motd.j2

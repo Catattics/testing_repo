@@ -35,6 +35,6 @@
 
     - name: Restart all services if kernel was not upgraded
       service:
-        name: "*"
+        name: *
         state: restarted
       when: kernel_upgrade_check.rc == 0

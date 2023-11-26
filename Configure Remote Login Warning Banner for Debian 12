@@ -4,7 +4,7 @@
   become: yes
 
   tasks:
-   - name: Download issue.j2 template
+    - name: Download issue.j2 template
       get_url:
         url: "https://raw.githubusercontent.com/Tcogswell/testing_repo/main/banner.j2"
         dest: /etc/ssh/banner

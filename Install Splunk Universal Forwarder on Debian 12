@@ -17,6 +17,11 @@
         src: "/tmp/splunkforwarder.tgz"
         dest: "/opt/"
 
+    - name: Download inputs.conf template
+      get_url:
+        url: "https://raw.githubusercontent.com/Catattics/testing_repo/main/inputs.conf"
+        dest: /opt/splunkforwarder/etc/system/local/
+
     - name: Configure Splunk Universal Forwarder
       ansible.builtin.copy:
         src: "inputs.conf"

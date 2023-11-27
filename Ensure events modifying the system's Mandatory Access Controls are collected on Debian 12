@@ -1,0 +1,21 @@
+---
+- name: Ensure events modifying the system's Mandatory Access Controls are collected on Debian 12
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Ensure audit rules for MAC modification events
+      copy:
+        content: |
+          -a always,exit -F arch=b64 -S setxattr,fsetxattr,lsetxattr,removexattr,fremovexattr,setfacl,setxattr,mprotect -k mac_modification
+          -a always,exit -F arch=b32 -S setxattr,fsetxattr,lsetxattr,removexattr,fremovexattr,setfacl,setxattr,mprotect -k mac_modification
+        dest: /etc/audit/rules.d/mac_modification.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/mac_modification.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

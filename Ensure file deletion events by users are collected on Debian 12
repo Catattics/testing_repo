@@ -1,0 +1,21 @@
+---
+- name: Ensure file deletion events by users are collected on Debian 12
+  hosts: all
+  become: yes
+
+  tasks:
+
+    - name: Ensure audit rules for file deletion events by users
+      copy:
+        content: |
+          -a always,exit -F arch=b64 -S unlink,unlinkat,rename,renameat -F auid>=1000 -F auid!=4294967295 -k file_deletion_by_users
+          -a always,exit -F arch=b32 -S unlink,unlinkat,rename,renameat -F auid>=1000 -F auid!=4294967295 -k file_deletion_by_users
+        dest: /etc/audit/rules.d/file_deletion_by_users.rules
+
+    - name: Reload auditd rules
+      command: auditctl -R /etc/audit/rules.d/file_deletion_by_users.rules
+
+    - name: Restart auditd service
+      service:
+        name: auditd
+        state: restarted

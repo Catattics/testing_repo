@@ -11,6 +11,7 @@
       ansible.builtin.get_url:
         url: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version={{ splunk_version }}&product=universalforwarder&filename=splunkforwarder-{{ splunk_version }}-Linux-x86_64.tgz"
         dest: "/tmp/splunkforwarder.tgz"
+      remote_src: yes
 
     - name: Extract Splunk Universal Forwarder
       ansible.builtin.unarchive:

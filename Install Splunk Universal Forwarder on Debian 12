@@ -1,36 +1,44 @@
 ---
 - name: Install Splunk Universal Forwarder on Debian 12
   hosts: all
-  become: yes
+  become: yes  # Run tasks with elevated privileges
 
   vars:
     splunk_version: "9.1.2"  # Replace with the desired Splunk version
+    splunk_build: "b6b9c8185839"  # Replace with the desired Splunk build
+    splunk_home: "/opt/splunkforwarder"
+    splunk_user: "splunk"
 
   tasks:
     - name: Download Splunk Universal Forwarder
       ansible.builtin.get_url:
-        url: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version={{ splunk_version }}&product=universalforwarder&filename=splunkforwarder-{{ splunk_version }}-Linux-x86_64.tgz"
+        url: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version={{ splunk_version }}&product=universalforwarder&filename=splunkforwarder-{{ splunk_version }}-{{ splunk_build }}-Linux-x86_64.tgz"
         dest: "/tmp/splunkforwarder.tgz"
-     
+    
     - name: Extract Splunk Universal Forwarder
       ansible.builtin.unarchive:
         src: "/tmp/splunkforwarder.tgz"
-        dest: "/opt/"
+        dest: "{{ splunk_home }}"
+        remote_src: yes  # Extract on the remote machine
 
-    - name: Download inputs.conf template
-      get_url:
-        url: "https://raw.githubusercontent.com/Catattics/testing_repo/main/inputs.conf"
-        dest: /opt/splunkforwarder/etc/system/local/
+    - name: Create Splunk user
+      ansible.builtin.user:
+        name: "{{ splunk_user }}"
+        system: yes
 
-    - name: Configure Splunk Universal Forwarder
-      ansible.builtin.copy:
-        src: "inputs.conf"
-        dest: "/opt/splunkforwarder/etc/system/local/"
-        mode: "0644"
-      notify:
-        - Restart Splunk Forwarder
+    - name: Set ownership of Splunk directory
+      ansible.builtin.file:
+        path: "{{ splunk_home }}"
+        owner: "{{ splunk_user }}"
+        group: "{{ splunk_user }}"
+        recurse: yes
 
-  handlers:
-    - name: Restart Splunk Forwarder
+    - name: Start Splunk Universal Forwarder
       ansible.builtin.command:
-        cmd: "/opt/splunkforwarder/bin/splunk restart"
+        cmd: "{{ splunk_home }}/bin/splunk start --accept-license --answer-yes --auto-ports"
+      become_user: "{{ splunk_user }}"
+
+    - name: Enable Splunk Universal Forwarder at boot
+      ansible.builtin.command:
+        cmd: "{{ splunk_home }}/bin/splunk enable boot-start"
+      become_user: "{{ splunk_user }}"

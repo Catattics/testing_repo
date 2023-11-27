@@ -8,11 +8,12 @@
     splunk_build: "b6b9c8185839"  # Replace with the desired Splunk build
     splunk_home: "/opt/splunkforwarder"
     splunk_user: "splunk"
+    splunk_download_url: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version={{ splunk_version }}&product=universalforwarder&filename=splunkforwarder-{{ splunk_version }}-{{ splunk_build }}-Linux-x86_64.tgz"
 
   tasks:
     - name: Download Splunk Universal Forwarder
       ansible.builtin.get_url:
-        url: "https://www.splunk.com/bin/splunk/DownloadActivityServlet?architecture=x86_64&platform=linux&version={{ splunk_version }}&product=universalforwarder&filename=splunkforwarder-{{ splunk_version }}-{{ splunk_build }}-Linux-x86_64.tgz"
+        url: "{{ splunk_download_url }}"
         dest: "/tmp/splunkforwarder.tgz"
     
     - name: Extract Splunk Universal Forwarder

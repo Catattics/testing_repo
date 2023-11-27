@@ -1,6 +1,6 @@
 ---
 - name: Ensure use of privileged commands is collected on Debian 12
-  hosts: your_debian12_host
+  hosts: all
   become: yes
 
   tasks:

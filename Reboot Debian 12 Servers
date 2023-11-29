@@ -1,6 +1,6 @@
 ---
 - name: Reboot Debian 12 Servers
-  hosts: your_debian_servers
+  hosts: all
   become: true  # Run tasks with elevated privileges (sudo)
 
   tasks:

@@ -1,0 +1,28 @@
+---
+- name: Uninstall Wazuh Agent on Debian 12
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Stop Wazuh Agent service
+      systemd:
+        name: wazuh-agent
+        state: stopped
+
+    - name: Remove Wazuh Agent package
+      apt:
+        name: wazuh-agent
+        state: absent
+
+    - name: Remove Wazuh Agent configuration files
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /etc/ossec-init.conf
+        - /var/ossec/
+        - /etc/systemd/system/multi-user.target.wants/wazuh-agent.service
+
+    - name: Reload systemd after removing Wazuh Agent
+      systemd:
+        daemon_reload: yes

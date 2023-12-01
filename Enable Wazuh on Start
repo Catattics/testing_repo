@@ -1,0 +1,16 @@
+---
+- name: Enable Wazuh on Start
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Enable Wazuh Agent to start on boot
+      systemd:
+        name: wazuh-agent
+        enabled: yes
+
+    - name: Start Wazuh Agent service
+      systemd:
+        name: wazuh-agent
+        state: started

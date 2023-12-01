@@ -1,6 +1,6 @@
 ---
 - name: Install and configure Wazuh Agent on Debian 12
-  hosts: your_target_host
+  hosts: all
   become: true
 
   tasks:

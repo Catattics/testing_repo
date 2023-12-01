@@ -35,6 +35,9 @@
     - name: Reload systemd
       systemd:
         daemon_reload: yes
+    
+    - name: Reboot
+      command: reboot
 
     - name: Enable Wazuh Agent service
       systemd:

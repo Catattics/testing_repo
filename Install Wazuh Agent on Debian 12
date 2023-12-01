@@ -1,6 +1,6 @@
 ---
 - name: Install and configure Wazuh Agent on Debian 12
-  hosts: all
+  hosts: your_target_host
   become: true
 
   tasks:
@@ -13,6 +13,16 @@
       command: dpkg -i /tmp/wazuh-agent_4.6.0-1_amd64.deb
       args:
         creates: /var/ossec/etc/preloaded-vars.conf  # This file is created after successful installation
+
+    - name: Create /var/ossec/etc/ directory
+      file:
+        path: /var/ossec/etc
+        state: directory
+
+    - name: Create ossec.conf file
+      copy:
+        content: ""
+        dest: /var/ossec/etc/ossec.conf
 
     - name: Set Wazuh Manager and Agent name
       lineinfile:
